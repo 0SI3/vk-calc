@@ -1,19 +1,5 @@
 <!doctype html>
 <html lang="ru">
-  <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
-<script>
-  try {
-    vkBridge.send('VKWebAppInit');
-    vkBridge.send('VKWebAppExpand'); // разворачивает на весь экран
-    vkBridge.subscribe((e) => {
-      if (e?.detail?.type === 'VKWebAppUpdateConfig') {
-        const d = e.detail.data || {};
-        document.documentElement.setAttribute('scheme', d.scheme || '');
-        if ('appearance' in d) document.documentElement.style.colorScheme = d.appearance;
-      }
-    });
-  } catch (_) {}
-</script>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
