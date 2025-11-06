@@ -1,0 +1,1649 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+
+<script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+<title>Калькулятор окупаемости рекламы (ROMI) — точный онлайн расчёт | РЕТАЧ</title>
+<meta name="description" content="Калькулятор окупаемости рекламы: рассчитайте ROMI, выручку, стоимость заказа (CAC) и план роста. Для e-commerce, B2B и офлайн. Без контактов, результат сразу.">
+
+  <!-- Favicons (kept) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=1">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+  <link rel="manifest" href="/site.webmanifest?v=1">
+  <meta name="theme-color" content="#0f172a">
+
+  <!-- Fonts & base styles (kept) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=Golos+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/retach-shared.css?v=4">
+  <link rel="stylesheet" href="/styles.css?v=22">
+
+  <!-- Yandex.Metrika (kept) -->
+  <script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+      m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=104358334', 'ym');
+    ym(104358334, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/104358334" style="position:absolute; left:-9999px;" alt=""></div></noscript>
+
+  <!-- ===== Page polish (scoped) ===== -->
+  <style id="calc-polish-v2-2025-11-02">
+    :root{
+      --brand-ink: #0b1324;
+      --brand-muted: #667085;
+      --brand-line: rgba(27,31,35,.10);
+      --brand-1: #7FB8FF;
+      --brand-2: #AFA4FF;
+      --brand-3: #FF97AA;
+      --green:   #12B76A;
+      --paper:   #ffffff;
+      /* set your hero image path here */
+
+    
+     --header-h: 72px; /* ← добавить эту строку */
+}
+@media (max-width:980px){ :root{ --header-h: 62px; } } /* ← добавить сразу после :root */
+    /* ===== HERO full-width image ===== */
+  .hero-wrap{
+  position:relative;
+min-height: clamp(420px, 52vh, 600px);
+
+  display:grid; place-items:center;
+  color:#0b1324;
+  /* Пастельный премиум-градиент в цветах бренда */
+  background:
+    radial-gradient(1200px 520px at 0% 0%, color-mix(in oklab, var(--brand-1) 22%, white) 0%, transparent 60%),
+    radial-gradient(1000px 520px at 100% 10%, color-mix(in oklab, var(--brand-2) 20%, white) 0%, transparent 62%),
+    radial-gradient(1200px 520px at 40% 100%, color-mix(in oklab, var(--brand-3) 18%, white) 0%, transparent 64%),
+    linear-gradient(180deg, #fbfbfe 0%, #ffffff 65%) !important;
+  overflow:hidden;
+  isolation:isolate;
+
+  /* full-bleed поверх любого контейнера */
+  width:100%;
+margin-left:0;
+margin-right:0;
+
+
+  margin-top: calc(-1 * var(--header-h)); /* ← добавить в КОНЕЦ правила */
+  
+
+
+  }
+/* Жёстко отключаем возможные фоны из retach-shared.css / styles.css */
+.hero-wrap::before{ content:none !important; }   /* если где-то создавался фон через псевдоэлемент */
+.hero-wrap::before{ background-image:none !important; } /* градиент у .hero-wrap оставляем */
+
+
+@supports not (color: oklab(0 0 0)){
+  .hero-wrap{ background: linear-gradient(135deg, #EAF3FF, #EFEAFF 50%, #FFE9EE 100%); }
+}
+
+    .hero-wrap::after{ /* subtle grid and vignette for readability */
+      content:""; position:absolute; inset:0;
+      background-image:
+        radial-gradient(rgba(11,19,36,.06) 1px, transparent 1px);
+      background-size:20px 20px;
+      opacity:.22; pointer-events:none;
+      mask: linear-gradient(#000 0%, rgba(0,0,0,.6) 60%, transparent 100%);
+      z-index:0;
+    }
+    .hero{
+  width:min(1180px, 100% - 32px);
+  margin-inline:auto;
+  display:grid; gap:18px;
+grid-template-columns: 1fr 1.2fr; /* правой колонке даём больше ширины */
+
+  align-items:center;
+  position:relative; z-index:1;
+padding: clamp(6px, 1.4vw, 14px) 0 0;
+ /* низ = 0, вплотную к краю блока */
+}
+.hero-copy{ position:relative; z-index:2; }      /* текст сверху */
+.hero-asset{ position:relative; z-index:1; 
+  margin-left: clamp(-24px, -5vw, -72px);        /* слегка уводим картинку влево под текст */
+  margin-top: clamp(-8px, -1.2vw, -24px);
+
+}
+
+    @media (max-width:980px){ .hero{ grid-template-columns:1fr; } }
+    .hero h1{ font:800 clamp(30px,5.2vw,48px)/1.12 Manrope,Inter,system-ui; letter-spacing:-.01em; margin:0; }
+    .hero .sub{ color:var(--brand-muted); font-size: clamp(16px, 2.2vw, 18px); margin:8px 0 0 }
+    .lead-badges{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px }
+    .lead-badge{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; font-weight:800; background:linear-gradient(135deg, #eef2ff, #fae8ff) }
+    .hero-card{
+      background:rgba(255,255,255,.82); border:1px solid var(--brand-line); border-radius:20px; padding:14px 16px;
+      box-shadow:0 12px 34px rgba(0,0,0,.12); backdrop-filter:saturate(120%) blur(6px);
+    }
+
+    /* ===== CALC vertical ===== */
+    #calc{ padding: clamp(16px,5vw,36px) 0 64px; }
+    #calc .container{ width:min(1180px, 100% - 32px); margin-inline:auto; }
+    .step{ margin: 14px 0; }
+    .step > .step-head{ display:flex; align-items:center; gap:10px; margin:0 0 10px; }
+    .step .numb{
+      width:28px; height:28px; border-radius:10px; display:grid; place-items:center;
+      font:900 14px/1 Manrope,Inter,system-ui;
+      background: linear-gradient(135deg, #eef2ff, #fae8ff);
+      box-shadow: inset 0 0 0 1px rgba(127,184,255,.35);
+    }
+    .step h2{ font:800 18px/1.2 Manrope,Inter,system-ui; margin:0; letter-spacing:-.01em }
+    .card{ background:#fff; border:1px solid var(--brand-line); border-radius:20px; box-shadow:0 6px 18px rgba(0,0,0,.06); padding:16px }
+    .grid{ display:grid; gap:12px }
+    .cols2{ grid-template-columns:repeat(2, minmax(0,1fr)) }
+    @media (max-width:860px){ .cols2{ grid-template-columns:1fr } }
+    .field{ display:flex; flex-direction:column; gap:6px }
+    .label{ font-weight:700 }
+    .hint{ font-size:12px; color:var(--brand-muted) }
+    .control{ position:relative }
+    .input{ width:100%; padding:14px 48px 14px 14px; border:1px solid var(--brand-line); border-radius:16px; font-size:16px; background:#fff; transition:border .2s, box-shadow .2s }
+    .input:focus{ outline:none; border-color:#cfe6ff; box-shadow:0 0 0 4px rgba(207,230,255,.45) }
+    .suffix{ position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--brand-muted); font-weight:700 }
+
+    /* Segment cards */
+    .seg{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px }
+    @media (max-width:980px){ .seg{ grid-template-columns:1fr 1fr } }
+    @media (max-width:560px){ .seg{ grid-template-columns:1fr } }
+    .opt{ cursor:pointer; padding:12px; border:1px solid var(--brand-line); border-radius:16px; background:#fff; display:flex; gap:10px; align-items:center; box-shadow:0 6px 18px rgba(0,0,0,.06) }
+    .opt .ico{ width:26px; height:26px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(135deg,#eef2ff,#fae8ff) }
+    .opt input{ position:absolute; opacity:0; pointer-events:none; }
+    .opt[aria-checked="true"]{ border-color:rgba(127,184,255,.55); box-shadow:0 10px 28px rgba(127,184,255,.16) }
+
+    /* Results + chart */
+    .two{ display:grid; grid-template-columns:1fr 1fr; gap:16px }
+    @media (max-width:980px){ .two{ grid-template-columns:1fr } }
+    .kv{ display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center }
+    .kv .label{ color:var(--brand-muted) }
+    .kv .value{ font-weight:800 }
+    .delta{ font-size:11px; padding:2px 6px; border-radius:999px; background:rgba(0,0,0,.08); margin-left:8px }
+    .pos{ background:rgba(216,243,229,.75)!important; color:#0f5132!important }
+    .neg{ background:rgba(255,226,225,.85)!important; color:#7a1d1d!important }
+    .actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:10px; flex-wrap:wrap }
+    .btn{ display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:24px; border:1px solid var(--brand-line); background:#fff; cursor:pointer; font-weight:800 }
+    .btn.primary{ color:#0b1324; background:linear-gradient(135deg,#B9E5FF 0%,#E9D7FE 50%,#FFD6C2 100%); border:none }
+    .btn.success{ background:var(--green); border-color:#0E8F55; color:#fff }
+    #chart, #planChart{ display:block; width:100%; height:300px }
+    @media (max-width:980px){ #chart, #planChart{ height:260px } }
+
+    /* Inner accordions (compact) */
+    details.acc{ border:1px solid var(--brand-line); border-radius:16px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.06); padding:12px 14px }
+    details.acc + details.acc{ margin-top:12px }
+    details.acc[open]{ box-shadow:0 12px 34px rgba(127,184,255,.15) }
+    details.acc > summary{ list-style:none; cursor:pointer; user-select:none; display:flex; align-items:center; gap:10px; font-weight:800 }
+    details.acc > summary::-webkit-details-marker{ display:none }
+    details.acc .acc-body{ padding-top:10px }
+
+    /* Small chips */
+    .pill{ display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; font:800 12px/1 Manrope,Inter,system-ui; background:linear-gradient(135deg,#eef2ff,#fae8ff) }
+  /* Картинка справа + акцент анимации */
+.hero-asset{
+  position:relative; z-index:1;
+  align-self:end; justify-self:end;
+  margin:0; margin-left: clamp(-24px, -5vw, -72px);
+  display:flex; align-items:flex-end; /* картинка внизу контейнера */
+}
+
+@media (max-width: 980px){
+  .hero-asset{ height: clamp(380px, 62vw, 720px); }
+}
+
+
+.hero-asset img{
+  display:block; width:auto; height:clamp(560px, 58vw, 1100px);
+
+max-height:none;
+
+
+  transform: translateY(40px); opacity:0;
+  filter: drop-shadow(0 16px 40px rgba(17,23,40,.20));
+  animation: hero-rise .9s cubic-bezier(.2,.8,.2,1) .15s forwards;
+}
+@keyframes hero-rise{
+  from{ transform: translateY(40px); opacity:0; }
+  to  { transform: translateY(0);   opacity:1; }
+}
+.hero{ background:none !important; } /* чтобы ни retach-shared.css, ни styles.css не навесили фон */
+/* === STEP 1: крупные карточки с фоном и подсветкой === */
+#calc .seg{
+  display:flex; gap:16px; align-items:stretch;
+  flex-wrap:nowrap;                 /* всегда в ОДИН ряд */
+  overflow-x:auto;                  /* если не влезает — скролл, а не перенос */
+  scroll-snap-type:x proximity;     /* приятный доскролл */
+  padding-bottom:6px;
+}
+#calc .opt.opt-card{ scroll-snap-align:start; }
+
+
+#calc .opt.opt-card{
+  position:relative; border:0 !important; border-radius:0; overflow:hidden;
+  min-height: clamp(520px, 72vh, 760px);
+  flex: 1 1 280px;                                /* базовая ширина */
+  box-shadow:0 12px 34px rgba(17,23,40,.12);
+  cursor:pointer; outline:none;
+  transition:
+    flex .35s cubic-bezier(.22,.61,.36,1),
+    transform .30s cubic-bezier(.22,.61,.36,1),
+    box-shadow .30s ease;
+}
+
+#calc .opt.opt-card input{ position:absolute; inset:0; opacity:0; } /* клики доходят до radio */
+
+#calc .opt.opt-card:first-child{ border-radius:18px 0 0 18px; }
+#calc .opt.opt-card:last-child{  border-radius:0 18px 18px 0; }
+
+
+
+/* фон */
+#calc .opt.opt-card::before{
+  content:""; position:absolute; inset:0;
+  background-image: var(--bg);
+  background-size: cover; background-position: center;
+  filter: saturate(96%);
+  transition: transform .35s cubic-bezier(.22,.61,.36,1);
+}
+/* затемнение в покое → светлее при наведении/выборе */
+#calc .opt.opt-card::after{
+  content:""; position:absolute; inset:0; z-index:1;
+  background: linear-gradient(180deg, rgba(6,11,20,.78), rgba(6,11,20,.56) 45%, rgba(6,11,20,.24) 85%);
+
+  transition: background .26s ease, opacity .26s ease;
+}
+
+/* тексты */
+#calc .opt.opt-card .content{
+  position:absolute; left:16px; right:16px; bottom:16px; z-index:2;
+  display:flex; flex-direction:column; gap:8px;
+}
+#calc .opt.opt-card .tag{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:6px 10px; border-radius:999px;
+  font-weight:800; background:rgba(255,255,255,.78);
+  backdrop-filter: blur(4px);
+  transform: translateY(8px); opacity:.0; transition:transform .22s ease, opacity .22s ease;
+}
+#calc .opt.opt-card .title{
+  font:900 clamp(18px,2.4vw,30px)/1.12 Manrope,Inter,system-ui;
+  letter-spacing:-.015em; color:#fff; text-shadow:0 3px 12px rgba(0,0,0,.45);
+  transform: translateY(10px); opacity:0;
+  transition: transform .28s ease, opacity .28s ease, color .2s ease, text-shadow .2s ease;
+}
+
+
+/* ховер/фокус/выбрано — подсветка и появление надписей */
+#calc .opt.opt-card:hover,
+#calc .opt.opt-card:focus-visible,
+#calc .opt[aria-checked="true"].opt-card{
+  transform: translateY(-2px);
+  box-shadow:0 18px 44px rgba(17,23,40,.18);
+}
+#calc .opt.opt-card:hover::after,
+#calc .opt.opt-card:focus-visible::after,
+#calc .opt[aria-checked="true"].opt-card::after{
+  background: linear-gradient(180deg, rgba(255,255,255,.90), rgba(255,255,255,.46) 55%, rgba(255,255,255,.06) 90%);
+}
+
+#calc .opt.opt-card:hover::before,
+#calc .opt.opt-card:focus-visible::before,
+#calc .opt[aria-checked="true"].opt-card::before{ transform: scale(1.02); }
+
+#calc .opt.opt-card:hover .title,
+#calc .opt.opt-card:focus-visible .title,
+#calc .opt[aria-checked="true"].opt-card .title{
+  transform: translateY(0); opacity:1; color:#0b1324; text-shadow:none;
+}
+#calc .opt.opt-card:hover .tag,
+#calc .opt.opt-card:focus-visible .tag,
+#calc .opt[aria-checked="true"].opt-card .tag{
+  transform: translateY(0); opacity:1;
+}
+
+/* доступность с клавиатуры */
+#calc .opt.opt-card:focus-visible{ outline:2px solid rgba(127,184,255,.55); outline-offset:2px; }
+/* навели/в фокусе — чуть шире */
+#calc .opt.opt-card:hover,
+#calc .opt.opt-card:focus-visible{
+  flex: 1.35 1 280px;
+}
+
+/* выбрали — расправляется заметно, остальные автоматически ужмутся */
+#calc .opt[aria-checked="true"].opt-card{
+  flex: 2 1 280px;
+  box-shadow:0 18px 44px rgba(17,23,40,.18);
+}
+/* ===== STEP 1 — сцена в стиле референса ===== */
+
+
+
+#calc .seg-aside .eyebrow{
+  opacity:.7; text-transform:uppercase; letter-spacing:.12em; font:800 12px/1 Inter,system-ui;
+}
+#calc .seg-aside .seg-title{
+  color:#fff; margin:10px 0 6px; font:900 clamp(20px,3.2vw,34px)/1.1 Manrope,Inter,system-ui; letter-spacing:-.015em;
+}
+#calc .seg-aside .seg-copy{ color:#c7ced6; margin:0 0 12px; max-width:52ch; }
+#calc .seg-progress{ height:3px; background:rgba(255,255,255,.12); border-radius:999px; overflow:hidden }
+#calc .seg-progress>span{ display:block; height:100%; width:calc((var(--idx,0)+1)/4*100%); background:linear-gradient(90deg,#7FB8FF,#FF97AA); transition:width .35s cubic-bezier(.22,.61,.36,1) }
+
+/* Карточки в ряд: скроллятся, но не переносятся */
+#calc .seg.seg-carousel{ display:flex; gap:0; align-items:stretch; flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x proximity; padding-bottom:6px }
+#calc .opt.opt-card{ scroll-snap-align:start; }
+
+/* Базовая карточка (тёмная, сжатая) */
+#calc .opt.opt-card{
+  position:relative; border:0 !important; border-radius:0; overflow:hidden;
+  min-height: clamp(440px, 64vh, 640px);
+  flex: 1 1 260px;
+  box-shadow:0 12px 34px rgba(17,23,40,.12);
+  cursor:pointer; outline:none;
+  transition:flex .35s cubic-bezier(.22,.61,.36,1), transform .30s cubic-bezier(.22,.61,.36,1), box-shadow .30s ease;
+}
+#calc .opt.opt-card input{ position:absolute; inset:0; opacity:0; pointer-events:none; }
+#calc .opt.opt-card::before{
+  content:""; position:absolute; inset:0;
+  background-image: var(--bg); background-size:cover; background-position:center;
+  filter: grayscale(.55) saturate(.85) brightness(.88);
+  transition: transform .35s cubic-bezier(.22,.61,.36,1), filter .25s ease;
+}
+#calc .opt.opt-card::after{
+  content:""; position:absolute; inset:0; z-index:1;
+  background: linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.54) 55%, rgba(0,0,0,.30) 100%);
+  transition: background .25s ease, opacity .25s ease;
+}
+#calc .opt.opt-card .content{ position:absolute; left:14px; right:14px; bottom:14px; z-index:2; display:flex; flex-direction:column; gap:8px }
+#calc .opt.opt-card .tag{
+  display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+  font-weight:900; background:rgba(255,255,255,.94); color:#0b1324;
+  transform:translateY(10px); opacity:0; transition: transform .22s ease, opacity .22s ease;
+}
+#calc .opt.opt-card .title{
+  font:900 clamp(18px,2.4vw,30px)/1.12 Manrope,Inter,system-ui; letter-spacing:-.015em;
+  color:#e5e7eb; text-shadow:0 3px 12px rgba(0,0,0,.55);
+  transform:translateY(10px); opacity:0; transition: transform .28s ease, opacity .28s ease, color .2s ease, text-shadow .2s ease;
+}
+
+/* Ховер — чуть шире и светлее */
+#calc .opt.opt-card:hover,
+#calc .opt.opt-card:focus-visible{ flex:1.35 1 260px; transform:translateY(-1px) }
+#calc .opt.opt-card:hover::before{ filter: grayscale(.35) saturate(1) brightness(.96) }
+#calc .opt.opt-card:hover::after{ background: linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,.10)) }
+#calc .opt.opt-card:hover .title, #calc .opt.opt-card:hover .tag{ transform:translateY(0); opacity:1 }
+
+/* Выбрана — расправляется, фон светлее, тексты контрастнее */
+#calc .opt[aria-checked="true"].opt-card{
+  flex:1.75 1 340px; transform:translateY(-2px); box-shadow:0 18px 44px rgba(17,23,40,.18);
+}
+#calc .opt[aria-checked="true"].opt-card::before{ filter:none; transform:scale(1.02) }
+#calc .opt[aria-checked="true"].opt-card::after{ background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.06)) }
+#calc .opt[aria-checked="true"].opt-card .title{ color:#0b1324; text-shadow:none; transform:translateY(0); opacity:1 }
+#calc .opt[aria-checked="true"].opt-card .tag{ background:#0b1324; color:#fff; transform:translateY(0); opacity:1 }
+
+/* Доступность */
+#calc .opt.opt-card:focus-visible{ outline:2px solid rgba(127,184,255,.55); outline-offset:2px }
+/* === STEP 1: full-bleed на общем фоне === */
+#calc .seg-full{
+  width:100%;
+  margin-left:0;
+  margin-right:0;
+  background:transparent;
+  padding: clamp(20px, 5vw, 48px) 0;
+}
+
+#calc .seg-head{
+  width:min(1180px, 100% - 32px);
+  margin: clamp(8px,2vw,16px) auto clamp(18px,3.2vw,28px) !important;
+  color:#0b1324;
+  position:relative; z-index:5;
+}
+
+#calc .seg-head .eyebrow{
+  font:800 12px/1 Manrope,Inter,system-ui !important;
+  letter-spacing:.14em !important;
+  text-transform:uppercase;
+  color:#0b1324cc !important;
+  margin-bottom:8px !important;
+  opacity:1 !important;
+}
+/* заголовок всегда видим (фолбэк), градиент включаем только где поддерживается */
+#calc .seg-head .seg-title,
+#calc .inputs-aside .seg-title{
+  font:900 clamp(26px,3.6vw,44px)/1.05 Manrope,Inter,system-ui !important;
+  letter-spacing:-.02em !important;
+  margin:0 0 clamp(8px,1vw,12px) !important;
+  color:#0b1324 !important;
+  position:relative; text-wrap:balance;
+}
+
+@supports (-webkit-background-clip:text) {
+  #calc .seg-head .seg-title,
+  #calc .inputs-aside .inputs-title,
+  #calc .inputs-aside .seg-title{
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+    background-image: none;
+  }
+}
+
+
+
+@supports (background-clip:text) {
+  #calc .seg-head .seg-title,
+  #calc .inputs-aside .inputs-title,
+  #calc .inputs-aside .seg-title{
+    background-clip: initial;
+    background-image: none;
+    color: inherit !important;
+  }
+}
+
+
+
+
+#calc .seg-head .seg-title::after,
+#calc .inputs-aside .seg-title::after{
+  content:""; display:block;
+  width:clamp(48px,6vw,92px); height:4px; border-radius:999px;
+  background:linear-gradient(90deg,#7FB8FF,#FF97AA);
+  margin-top:clamp(10px,1.2vw,14px);
+}
+
+#calc .seg-head .seg-copy{
+  margin:0 !important;
+  color:#475569 !important;          /* темнее и спокойнее */
+  max-width:56ch !important;
+  font:500 clamp(14px,1.5vw,16px)/1.45 Inter,system-ui !important;
+  text-wrap:pretty;
+}
+
+/* Лента карточек: на всю ширину, прилипшие друг к другу */
+#calc .seg-row{
+  display:flex; align-items:stretch; gap:0;
+  overflow-x:auto; overflow-y:hidden; /* ← убрать вертикальный скролл */
+  scroll-snap-type:x proximity;
+  height: clamp(440px, 72vh, 720px);
+  padding-inline: clamp(16px, 5vw, 40px);
+}
+
+
+#calc .opt.opt-card{
+  position:relative; border:0; border-radius:0; overflow:hidden;
+  flex: 1 1 25%; height:100%;                             /* одинаковая высота, прилипшие */
+  box-shadow: none; cursor:pointer; outline:none;
+  transition: flex .35s cubic-bezier(.22,.61,.36,1), transform .30s cubic-bezier(.22,.61,.36,1);
+  scroll-snap-align:start;
+}
+#calc .opt.opt-card:first-child{ border-radius:18px 0 0 18px; }
+#calc .opt.opt-card:last-child{  border-radius:0 18px 18px 0; }
+
+#calc .opt.opt-card::before{
+  content:""; position:absolute; inset:0;
+  background-image: var(--bg); background-size:cover; background-position:center;
+  filter: grayscale(.45) saturate(.9) brightness(.9);
+  transition: transform .35s cubic-bezier(.22,.61,.36,1), filter .25s ease;
+}
+#calc .opt.opt-card::after{
+  content:""; position:absolute; inset:0; z-index:1;
+  background: linear-gradient(180deg, rgba(0,0,0,.78), rgba(0,0,0,.56) 55%, rgba(0,0,0,.28) 100%);
+  transition: background .25s ease, opacity .25s ease;
+}
+
+/* Тексты на карточках (чёткие и компактные) */
+#calc .opt.opt-card .content{ position:absolute; left:14px; right:14px; bottom:14px; z-index:2; display:flex; flex-direction:column; gap:8px }
+#calc .opt.opt-card .tag{
+  display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+  font-weight:900; background:rgba(255,255,255,.94); color:#0b1324;
+  transform:translateY(10px); opacity:0; transition: transform .22s ease, opacity .22s ease;
+}
+#calc .opt.opt-card .title{
+  font:900 clamp(18px,2.4vw,28px)/1.12 Manrope,Inter,system-ui; letter-spacing:-.015em;
+  color:#e5e7eb; text-shadow:0 3px 12px rgba(0,0,0,.55);
+  transform:translateY(10px); opacity:0; transition: transform .28s ease, opacity .28s ease, color .2s ease, text-shadow .2s ease;
+}
+
+/* Ховер — лёгкое расширение и подсветка */
+/* подсветим слой, но без изменения flex — перераспределение ниже через :has() */
+#calc .opt.opt-card:hover,
+#calc .opt.opt-card:focus-visible{ transform:translateY(-1px); z-index:2; }
+
+#calc .opt.opt-card:hover::before{
+  filter: grayscale(.25) saturate(1) brightness(1);
+  transform: scale(1.06);
+}
+
+#calc .opt.opt-card:hover::after{ background: linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,.10)) }
+#calc .opt.opt-card:hover .title, #calc .opt.opt-card:hover .tag{ transform:translateY(0); opacity:1 }
+
+/* Выбрана — заметно шире, фон светлее, тексты тёмные */
+#calc .opt[aria-checked="true"].opt-card{
+  transform:translateY(-2px);
+}
+
+#calc .opt[aria-checked="true"].opt-card::before{
+  filter:none;
+  transform: scale(1.08);
+}
+
+#calc .opt[aria-checked="true"].opt-card::after{ background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.06)) }
+#calc .opt[aria-checked="true"].opt-card .title{ color:#0b1324; text-shadow:none; transform:translateY(0); opacity:1 }
+#calc .opt[aria-checked="true"].opt-card .tag{ background:#0b1324; color:#fff; transform:translateY(0); opacity:1 }
+
+/* Доступность */
+#calc .opt.opt-card:focus-visible{ outline:2px solid rgba(127,184,255,.55); outline-offset:2px }
+/* ===== Перераспределение ширины ряда ===== */
+/* Навели мышь на карточку — все ужались, наведённая расширилась */
+#calc .seg-row:has(.opt.opt-card:hover) .opt.opt-card{ flex:0.8 1 18%; }
+#calc .seg-row:has(.opt.opt-card:hover) .opt.opt-card:hover{ flex:2.4 1 46%; }
+
+/* То же для клавиатурного фокуса */
+#calc .seg-row:has(.opt.opt-card:focus-visible) .opt.opt-card{ flex:0.8 1 18%; }
+#calc .seg-row:has(.opt.opt-card:focus-visible) .opt.opt-card:focus-visible{ flex:2.4 1 46%; }
+
+/* Выбрана (aria-checked="true") — фиксированно шире, остальные ужаты */
+#calc .seg-row:has(.opt[aria-checked="true"].opt-card) .opt.opt-card{ flex:0.9 1 18%; }
+#calc .seg-row:has(.opt[aria-checked="true"].opt-card) .opt[aria-checked="true"].opt-card{ flex:2.2 1 44%; }
+
+/* Плавность и оптимизация */
+#calc .opt.opt-card{ will-change:flex, transform; }
+/* === STEP 2: two-column layout (1/3 + 2/3) === */
+#calc .inputs-stage{
+  display:grid;
+  grid-template-columns: 1fr 2fr;          /* слева 1/3, справа 2/3 */
+  gap: clamp(16px, 2.4vw, 28px);
+  align-items:start;
+}
+
+@media (max-width: 980px){
+  #calc .inputs-stage{ grid-template-columns: 1fr; }
+}
+
+/* левая колонка с текстом */
+#calc .inputs-aside{
+  padding: clamp(6px, 1.4vw, 12px) 0;
+  color:#0b1324;
+}
+#calc .inputs-aside .eyebrow{
+  font:800 12px/1 Manrope,Inter,system-ui;
+  letter-spacing:.12em; text-transform:uppercase; opacity:.7; margin-bottom:8px;
+}
+#calc .inputs-aside .inputs-title{
+  font:900 clamp(26px,3.6vw,44px)/1.05 Manrope,Inter,system-ui !important;
+  letter-spacing:-.02em !important;
+  margin:0 0 clamp(8px,1vw,12px) !important;
+  color:#0b1324 !important;
+  position:relative; 
+  text-wrap:balance;
+}
+#calc .inputs-aside .inputs-title::after{
+  content:""; display:block;
+  width:clamp(48px,6vw,92px); height:4px; border-radius:999px;
+  background:linear-gradient(90deg,#7FB8FF,#FF97AA);
+  margin-top:clamp(10px,1.2vw,14px);
+}
+
+#calc .inputs-aside .inputs-copy{
+  color:#475569; margin:0; max-width:56ch; text-wrap:pretty;
+}
+
+/* правая карточка с полями */
+#calc .inputs-card.card{ padding: clamp(14px, 1.8vw, 18px); border-radius: 18px; }
+#calc #calc-form{
+  display:grid; gap:12px;
+  grid-template-columns: 1fr;              /* поля строго друг под другом */
+}
+/* === FEATURE TOGGLES (Сегтач/Сайт/Сегментация) === */
+#calc .features{ padding:16px; border-radius:18px; }
+#calc .features .feat-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+#calc .features .feat-grid{ display:flex; gap:10px; flex-wrap:wrap; }
+#calc .features .feat{
+  display:inline-flex; align-items:center; gap:10px; padding:10px 12px; border-radius:12px;
+  border:1px solid rgba(27,31,35,.12); background:#fff; cursor:pointer; user-select:none;
+  transition: box-shadow .2s ease, border-color .2s ease, background .2s ease;
+}
+#calc .features .feat input{ appearance:auto; accent-color:#0b1324; }
+#calc .features .feat:has(input:checked){
+  border-color: rgba(127,184,255,.55);
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
+  box-shadow: 0 8px 22px rgba(127,184,255,.16);
+}
+#calc .features .feat .txt{ font:600 14px/1.2 Inter,system-ui; color:#0b1324; }
+/* === FEATURES (как на рефе) === */
+#calc .features{ border-radius:18px; padding:14px; }
+#calc .feat-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+#calc .feat-presets{ display:flex; gap:8px; flex-wrap:wrap; }
+#calc .preset{
+  padding:8px 12px; border-radius:999px; border:1px solid rgba(27,31,35,.12);
+  background:#fff; cursor:pointer; font:600 13px/1 Inter,system-ui; color:#0b1324;
+}
+#calc .preset:hover{ background:#f7f9ff; border-color:rgba(127,184,255,.45); }
+
+#calc .feat-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:10px;
+}
+@media (max-width:980px){ #calc .feat-grid{ grid-template-columns:1fr; } }
+
+#calc .feat-card{
+  --acc:#7FB8FF;
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px; border-radius:14px; border:1px solid rgba(27,31,35,.12); background:#fff;
+  box-shadow:0 6px 16px rgba(0,0,0,.06); transition: box-shadow .2s, border-color .2s, background .2s;
+}
+#calc .feat-card input{ position:absolute; opacity:0; pointer-events:none; }
+#calc .feat-card .left{ display:flex; align-items:center; gap:10px; }
+#calc .feat-card .icon{
+  width:34px; height:34px; border-radius:10px; display:grid; place-items:center;
+  background: color-mix(in oklab, var(--acc) 18%, #fff); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--acc) 45%, #fff);
+}
+#calc .feat-card .title{ font:800 16px/1.1 Manrope,Inter,system-ui; letter-spacing:-.01em; }
+#calc .feat-card .sub{ font:600 12px/1.2 Inter,system-ui; opacity:.65; }
+#calc .feat-card .plus{
+  padding:6px 10px; border-radius:999px; background:#E6F7EE; color:#0E8F55; font:800 13px/1 Inter,system-ui;
+  white-space:nowrap;
+}
+/* состояние включено */
+#calc .feat-card.on{
+  background:linear-gradient(180deg, #ffffff, color-mix(in oklab, var(--acc) 5%, #fff));
+  border-color: color-mix(in oklab, var(--acc) 45%, rgba(27,31,35,.12));
+  box-shadow:0 12px 28px color-mix(in oklab, var(--acc) 22%, transparent);
+}
+/* Goal & Plan — всегда раскрыт */
+#goalPanel[open] summary{ display:none !important; }      /* на случай, если остался summary где-то */
+#goalPanel .goal-head{
+  font:900 clamp(20px, 3vw, 28px)/1.15 Manrope,Inter,system-ui;
+  letter-spacing:-.015em; margin:0 0 8px; color:#0b1324;
+}
+#planCards{ display:grid !important; gap:12px; }          /* карточки плана всегда видны */
+#ecoDetails{ display:grid !important; gap:12px; }         /* блок экономики всегда виден */
+#planChartWrap{ display:block !important; }               /* нижний график плана всегда виден */
+#btnGoal{ display:none !important; }                      /* кнопку не показываем */
+/* Вуаль для блока результатов/планов пока нет выбора сферы и 3 чисел */
+/* Вуаль: под ней НИЧЕГО не видно и не кликается, видна только подсказка */
+#outcomeWrap.outcome.locked{
+  position: relative;
+  isolation: isolate;                /* создаём стек контекст */
+}
+#outcomeWrap.outcome.locked > *{
+  visibility: hidden;                /* скрыть ВСЕ дочерние элементы */
+  pointer-events: none !important;   /* и запретить клики по ним */
+}
+#outcomeWrap.outcome.locked::before{
+  content:"";
+  position:absolute; inset:0;
+  background:#ffffff;                /* сплошная вуаль */
+  border-radius:18px;
+  z-index: 10;                       /* выше любых детей */
+  pointer-events: auto;              /* ловим клики, блокируем низ */
+}
+#outcomeWrap.outcome.locked::after{
+  content:"Выберите сферу и введите бюджет, заказы и средний чек";
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  padding:12px 16px; border-radius:12px;
+  background:#fff;
+  box-shadow:0 10px 24px rgba(11,19,36,.12);
+  font:800 clamp(14px,1.6vw,18px)/1.3 Inter,system-ui; color:#0b1324; letter-spacing:.01em;
+  text-align:center;
+  z-index: 11;                       /* над вуалью */
+  pointer-events:none;
+}
+/* ===== Bottom-right helper modal ===== */
+#calcHelper{
+  position: fixed;
+  right: clamp(12px, 2vw, 20px);
+  bottom: clamp(12px, 2vw, 20px);
+  width: min(560px, 92vw);
+  z-index: 4000;
+  border-radius: 16px;
+  border: 1px solid rgba(27,31,35,.12);
+  background: #fff;
+  box-shadow: 0 18px 48px rgba(11,19,36,.18);
+  transform: translateY(8px);
+  opacity: 0;
+  transition: opacity .22s ease, transform .22s ease;
+  overflow: visible; /* ← добавить */
+}
+#calcHelper.on{ opacity: 1; transform: translateY(0); }
+#calcHelper[hidden]{ display:none !important; }
+
+#calcHelper .h-inner{
+  display: grid;
+  grid-template-columns: 1fr;              /* текст в одну колонку */
+  gap: 12px;
+  padding: 16px 16px 16px 16px;
+  padding-right: clamp(120px, 24vw, 240px);/* место справа под «вылезание» */
+}
+
+@media (max-width: 720px){
+  #calcHelper .h-inner{ grid-template-columns: 1fr; }
+}
+
+#calcHelper .h-close{
+  position:absolute; top:6px; right:8px;
+  width:32px; height:32px; border-radius:8px; border:0; cursor:pointer;
+  background:#f3f4f6; font:700 16px/1 Inter,system-ui;
+  z-index:3; /* над «вылезшей» картинкой */
+}
+
+#calcHelper .h-close:hover{ background:#eef2ff; }
+
+#calcHelper .h-text .h-eyebrow{
+  font:800 12px/1 Inter,system-ui; letter-spacing:.12em; text-transform:uppercase; opacity:.7; margin-bottom:6px;
+}
+#calcHelper .h-text h3{
+  margin:0 0 6px; font:900 20px/1.2 Manrope,Inter,system-ui; letter-spacing:-.01em; color:#0b1324;
+}
+#calcHelper .h-text .h-steps{
+  margin:0 0 10px 18px; padding:0; color:#374151; font:500 14px/1.45 Inter,system-ui;
+}
+#calcHelper .h-text .h-ok{
+  padding:10px 14px; border-radius:10px; border:1px solid rgba(27,31,35,.12);
+  background:#0b1324; color:#fff; font:800 14px/1 Inter,system-ui; cursor:pointer;
+}
+#calcHelper .h-figure{
+  position:absolute;                 /* выносим поверх и за края */
+  top: clamp(-28px, -3vw, -16px);
+  right: clamp(-28px, -3vw, -16px);
+  width: clamp(180px, 32vw, 320px);
+  height:auto;
+  margin:0;
+  z-index:2;                         /* выше фона, ниже кнопки закрытия */
+  pointer-events:none;               /* не мешаем кликам по модалке */
+}
+#calcHelper .h-figure img{
+  display:block; width:100%; height:auto;
+  border-radius:12px;
+  filter: drop-shadow(0 14px 40px rgba(11,19,36,.22));
+}
+@media (max-width:720px){
+  #calcHelper .h-inner{ padding-right: clamp(100px, 40vw, 180px); }
+  #calcHelper .h-figure{ width: clamp(140px, 46vw, 220px); }
+}
+
+html, body{ overflow-x:hidden; }
+
+
+
+  </style>
+</head>
+<body>
+
+<!-- ===== Header include (kept) ===== -->
+<div id="site-header" data-include="/partials/header.html"></div>
+
+<!-- ===== HERO (full-width background image) ===== -->
+<section class="hero-wrap">
+  <div class="hero">
+    <div class="hero-copy">
+<h1>Сколько зарабатывает ваша реклама?</h1>
+<p class="sub">Введите бюджет, заказы и чек — увидите ROMI, CAC и план роста. <b>Без контактов.</b></p>
+      <div class="lead-badges">
+  <span class="lead-badge">Честный расчёт за 10 сек</span>
+  <span class="lead-badge">Экспорт PNG/PDF</span>
+  <span class="lead-badge">E-com • B2B • Оффлайн</span>
+</div>
+    </div>
+    <figure class="hero-asset" aria-hidden="true">
+  <img src="/images/calc/calc.png" alt="" width="960" height="960" decoding="async" loading="eager">
+</figure>
+
+  </div>
+</section>
+
+<!-- ===== Calculator (top → down) ===== -->
+<section id="calc">
+  <div class="container">
+
+    <!-- Step 1: Segment -->
+
+     
+<div class="seg-full" role="region" aria-label="Сфера бизнеса">
+  <div class="seg-head">
+    <div class="eyebrow">Шаг 1</div>
+    <h3 class="seg-title">Выберите сферу</h3>
+    <p class="seg-copy">Это нужно, чтобы расчёт ROMI и CAC учитывал вашу экономику.</p>
+  </div>
+
+
+ 
+
+ <div class="seg seg-row" role="radiogroup" aria-label="Сфера бизнеса">
+
+    <label class="opt opt-card" data-k="ecom" role="radio" tabindex="0"
+           style="--bg:url('/images/calc/magazin.png')">
+  <input type="radio" name="seg" id="seg_ecom" value="ecom">
+
+      <div class="content">
+        <span class="tag">Интернет-магазин</span>
+        <div class="title">E-commerce</div>
+      </div>
+    </label>
+
+    <label class="opt opt-card" data-k="b2b" role="radio" tabindex="0"
+           style="--bg:url('/images/calc/b2b.png')">
+      <input type="radio" name="seg" id="seg_b2b" value="b2b">
+      <div class="content">
+        <span class="tag">Производство и опт</span>
+        <div class="title">B2B</div>
+      </div>
+    </label>
+
+    <label class="opt opt-card" data-k="retail" role="radio" tabindex="0"
+           style="--bg:url('/images/calc/uslugi.png')">
+      <input type="radio" name="seg" id="seg_retail" value="retail">
+      <div class="content">
+        <span class="tag">Оффлайн-сервисы</span>
+        <div class="title">Услуги/розница</div>
+      </div>
+    </label>
+
+    <label class="opt opt-card" data-k="novice" role="radio" tabindex="0"
+           style="--bg:url('/images/calc/new.png')">
+      <input type="radio" name="seg" id="seg_novice" value="novice">
+      <div class="content">
+        <span class="tag">Старт проекта</span>
+        <div class="title">Новый проект</div>
+      </div>
+    </label>
+</div> <!-- закрывает .seg-row -->
+</div> <!-- закрывает .seg-full -->
+
+
+    <!-- Step 2: Inputs (+ optional params here as an inner accordion) -->
+    
+<div class="inputs-stage">
+  <aside class="inputs-aside">
+    <div class="eyebrow">Шаг 2</div>
+    <h3 class="seg-title">Введите 3 числа</h3>
+    <p class="inputs-copy">Бюджет на рекламу, заказы в месяц и средний чек. Эти данные нужны, чтобы рассчитать ROMI и CAC.</p>
+  </aside>
+  <div class="inputs-card card">
+    <div class="grid" id="calc-form">
+
+        <div class="field">
+          <span class="label">Бюджет на рекламу в месяц</span>
+          <div class="control">
+            <input id="budget" class="input" type="number" min="0" step="1000" inputmode="numeric" placeholder="напр. 250000">
+            <span class="suffix">₽</span>
+          </div>
+          <span class="hint">Сколько тратите на рекламу в месяц</span>
+        </div>
+        <div class="field">
+          <span class="label">Заказы в месяц</span>
+          <div class="control">
+            <input id="orders" class="input" type="number" min="0" step="1" inputmode="numeric" placeholder="напр. 1200">
+            <span class="suffix">заказов</span>
+          </div>
+          <span class="hint">Подтверждённых заказов за месяц</span>
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <span class="label">Средний чек</span>
+          <div class="control">
+            <input id="aov" class="input" type="number" min="0" step="100" inputmode="numeric" placeholder="напр. 3500">
+            <span class="suffix">₽</span>
+          </div>
+          <span class="hint">Средняя сумма одного заказа</span>
+        </div>
+
+        <!-- Optional params within step 2 -->
+        <div class="field" style="grid-column:1/-1">
+          
+        </div>
+            </div> <!-- /#calc-form -->
+    </div> <!-- /.inputs-card -->
+  </div> <!-- /.inputs-stage -->
+<div id="outcomeWrap" class="outcome locked">
+
+    <!-- Step 3: Quick Results -->
+    <div class="step">
+      <div class="step-head"><span class="numb">3</span><h2>Результат</h2></div>
+      <div class="card">
+        <div class="two">
+          <div class="card">
+            <div class="pill">Текущие</div>
+            <div class="kv"><div class="label">Выручка за месяц</div><div class="value" id="now_rev">—</div></div>
+            <div class="kv"><div class="label">Бюджет рекламы</div><div class="value" id="now_budget">—</div></div>
+            <div class="kv"><div class="label">Заказы за месяц</div><div class="value" id="now_orders">—</div></div>
+            <div class="kv"><div class="label">Средний чек</div><div class="value" id="now_aov">—</div></div>
+            <div class="kv"><div class="label">Стоимость одного заказа</div><div class="value" id="now_cac">—</div></div>
+          </div>
+          <div class="card">
+            <div class="pill" id="with_title">Заявок ×1.60 • Средний чек +15% • Цена клика та же</div>
+            <div class="kv"><div class="label">Выручка за месяц</div><div class="value"><span id="with_rev">—</span><span id="d_rev" class="delta">—</span></div></div>
+            <div class="kv"><div class="label">Бюджет рекламы</div><div class="value"><span id="with_budget">—</span><span id="d_budget" class="delta">—</span></div></div>
+            <div class="kv"><div class="label">Заказы за месяц</div><div class="value"><span id="with_orders">—</span><span id="d_orders" class="delta">—</span></div></div>
+            <div class="kv"><div class="label">Средний чек</div><div class="value"><span id="with_aov">—</span><span id="d_aov" class="delta">—</span></div></div>
+            <div class="kv"><div class="label">Стоимость одного заказа</div><div class="value"><span id="with_cac">—</span><span id="d_cac" class="delta">—</span></div></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:12px"><canvas id="chart" height="300"></canvas></div>
+        <!-- FEATURES: красивый блок опций -->
+<div id="featuresBlock" class="card features" style="margin-top:12px">
+  <div class="feat-top">
+    <div class="smallpill">Что подключить</div>
+    <div class="feat-presets">
+      <button class="preset" type="button" data-preset="all">Включить всё</button>
+      <button class="preset" type="button" data-preset="sigtouch">Только СегТач</button>
+      <button class="preset" type="button" data-preset="none">Отключить всё</button>
+    </div>
+  </div>
+
+  <div class="feat-grid">
+    <!-- СегТач -->
+    <label class="feat-card" data-key="sigtouch" style="--acc:#5B8CFF;">
+      <input type="checkbox" checked>
+      <div class="left">
+        <span class="icon">⚡</span>
+        <div class="info">
+          <div class="title">СегТач</div>
+          <div class="sub">0 ₽ • 7 дней</div>
+        </div>
+      </div>
+      <span class="plus" id="featPlus-sigtouch">+0 ₽</span>
+    </label>
+
+    <!-- Конверсионный сайт -->
+    <label class="feat-card" data-key="site" style="--acc:#79C6A3;">
+      <input type="checkbox">
+      <div class="left">
+        <span class="icon">🖥️</span>
+        <div class="info">
+          <div class="title">Конверсионный сайт</div>
+          <div class="sub">экран-оффер</div>
+        </div>
+      </div>
+      <span class="plus" id="featPlus-site">+0 ₽</span>
+    </label>
+
+    <!-- Сегментация -->
+    <label class="feat-card" data-key="segment" style="--acc:#FF97AA;">
+      <input type="checkbox">
+      <div class="left">
+        <span class="icon">🎯</span>
+        <div class="info">
+          <div class="title">Сегментация ЦА</div>
+          <div class="sub">тёплые/холодные</div>
+        </div>
+      </div>
+      <span class="plus" id="featPlus-segment">+0 ₽</span>
+    </label>
+  </div>
+</div>
+
+
+        <div class="actions">
+          <button class="btn" id="btnPng">Скачать график (PNG)</button>
+          <button class="btn" id="btnPdf">Скачать PDF</button>
+          <button class="btn success" type="button" data-cb-open>Обсудить рост</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Goal & Plan (own chart below) -->
+<details class="acc" id="goalPanel" open>
+
+   <div class="goal-head">Цель и план</div>
+
+      <div class="acc-body">
+        <div class="card grid cols2">
+          <div class="field">
+            <span class="label">Целевая месячная выручка</span>
+            <div class="control"><input id="target" class="input" type="number" min="0" step="100000" inputmode="numeric" placeholder="напр. 10 000 000"><span class="suffix">₽</span></div>
+          </div>
+          <div class="field">
+            <span class="label">Рост рекламного бюджета в месяц</span>
+            <div class="control"><input id="cap2" class="input" type="number" min="0" max="100" step="1" value="10" inputmode="numeric"><span class="suffix">%</span></div>
+            <span class="hint">На сколько увеличивать бюджет ежемесячно (по умолчанию 10%).</span>
+          </div>
+        </div>
+        <div id="planCards" class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <div class="kv"><div class="label">Целевая выручка</div><div class="value" id="p_target1">—</div></div>
+            <div class="kv"><div class="label">Нужный бюджет</div><div class="value" id="p_budget_base">—</div></div>
+            <div class="kv"><div class="label">Когда достигнем цели</div><div class="value" id="p_hit_base">—</div></div>
+          </div>
+          <div class="card">
+            <div class="kv"><div class="label">Целевая выручка</div><div class="value" id="p_target2">—</div></div>
+            <div class="kv"><div class="label">Нужный бюджет</div><div class="value" id="p_budget_with">—</div></div>
+            <div class="kv"><div class="label">Когда достигнем цели</div><div class="value" id="p_hit_with">—</div></div>
+          </div>
+          <div class="card" style="grid-column:1/-1">
+            <div class="kv"><div class="label">Сколько сэкономим на рекламе</div><div class="value" id="p_saved">—</div></div>
+            <div class="kv"><div class="label">Как быстрее придём к цели</div><div class="value" id="p_faster">—</div></div>
+          </div>
+        </div>
+        <!-- separate plan chart -->
+        <div class="card" style="margin-top:12px; display:none" id="planChartWrap">
+          <canvas id="planChart" height="300"></canvas>
+          <div class="actions" style="margin-top:10px">
+            <button class="btn" id="btnPngPlan">Скачать график плана (PNG)</button>
+          </div>
+        </div>
+      </div>
+    </details>
+</div> <!-- /#outcomeWrap -->
+
+  </div>
+</section>
+
+<!-- ===== Footer include (kept) ===== -->
+<div class="footer-bleed-wrap" id="site-footer-wrap">
+  <div id="site-footer" data-include="/partials/footer.html"></div>
+</div>
+
+<!-- ===== Callback modal (kept) ===== -->
+<div class="cb-modal" hidden>
+  <div class="cb-backdrop" data-cb-close></div>
+  <div class="cb-dialog" role="dialog" aria-modal="true" aria-labelledby="cb-title">
+    <button class="cb-x" type="button" aria-label="Закрыть" data-cb-close>×</button>
+    <h3 id="cb-title">Обратный звонок</h3>
+    <form id="callback-form" novalidate>
+      <div class="cb-row">
+        <label for="cb-phone">Телефон *</label>
+        <input id="cb-phone" name="phone" type="tel" inputmode="tel" required
+               placeholder="+7 (___) ___-__-__" autocomplete="tel">
+      </div>
+      <input type="text" name="company" class="cb-hp" tabindex="-1" autocomplete="off">
+      <label class="cb-consent">
+        <input id="cb-consent" type="checkbox" name="consent" required>
+        <span>Соглас(ен/на) на обработку персональных данных и ознакомлен(а) с
+          <a href="/consent.html" target="_blank" rel="noopener">Политикой конфиденциальности</a>.
+        </span>
+      </label>
+      <div class="cb-actions">
+        <button class="cb-submit" type="submit">Отправить</button>
+        <button class="cb-cancel" type="button" data-cb-close>Отмена</button>
+      </div>
+      <p class="cb-msg" aria-live="polite"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ===== Site scripts (kept) ===== -->
+<!-- removed retach-menu.js for standalone build -->
+<!-- removed retach-hf.js for standalone build -->
+
+<!-- ===== Calculator JS (logic preserved; dual charts) ===== -->
+<script>
+(function(){
+  'use strict';
+  const root = document.getElementById('calc');
+  if(!root) return;
+const lockOutcome = (on)=>{ const w = document.getElementById('outcomeWrap'); if (w) w.classList.toggle('locked', !!on); };
+// когда вуаль снята — вернуть видимость детям
+const w = document.getElementById('outcomeWrap');
+if (w) w.addEventListener('transitionend', ()=>{ if (!w.classList.contains('locked')) { w.querySelectorAll('*').forEach(n=> n.style.visibility=''); }}, {passive:true});
+
+  const $    = s => root.querySelector(s);
+  const num  = s => {
+  const el = $(s);
+  const raw = el?.value ?? '';
+  const norm = (''+raw).replace(/\s/g,'').replace(',', '.'); // "250 000" → "250000", "2,5" → "2.5"
+  return Number(norm) || 0;
+};
+
+  const seg  = () => (root.querySelector('input[name="seg"]:checked')||{}).value || 'ecom';
+  const mny  = x => isFinite(x) ? x.toLocaleString('ru-RU',{maximumFractionDigits:0})+' ₽' : '—';
+  const iNT  = x => isFinite(x) ? Math.round(x).toLocaleString('ru-RU') : '—';
+  const clamp= (v,min,max)=> Math.min(max, Math.max(min, v));
+  function niceMax(x){ if(!isFinite(x)||x<=0) return 1; const e=Math.floor(Math.log10(x)), f=x/Math.pow(10,e); return (f<=1?1:f<=2?2:f<=5?5:10)*Math.pow(10,e); }
+  function getVar(name, fallback){ const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v || fallback; }
+
+  const defaults = { MARGIN:.33 };
+
+// Улучшения (лифт) в зависимости от сферы и подключённых опций
+// Дарина (Сегтач): +60% к заявкам (CR) всегда
+// Конверсионный сайт: лифт CR по сфере + AOV +8% если сайт включён
+// Сегментация: лифт CR по сфере
+const IMPROVE = {
+  sigtouch: 1.60,                 // +60% заявок
+  aovWithSite: 1.08,              // +8% средний чек, если есть конверсионный сайт
+  siteCR:     { ecom:1.90, b2b:1.60, retail:1.45, novice:1.50 },
+  segmentCR:  { ecom:1.50, b2b:1.30, retail:1.15, novice:1.25 }
+};
+
+// Определяем, какие улучшения включены.
+// Если у тебя есть блок тумблеров (featuresBlock) с data-key="site"/"segment" — читаем их.
+// Если тумблеров нет, считаем, что включён только Сегтач (site/segment = false).
+function isFeatOn(key){
+  const n = document.querySelector(`#featuresBlock .feat-card[data-key="${key}"] input`);
+  return n ? !!n.checked : false;
+}
+
+
+// Оценка прироста выручки для каждой опции (показываем на зелёном бейдже)
+function estPlusByFeature(key){
+  const s = seg() || 'ecom';
+  const ex = (typeof EXAMPLE!=='undefined' && EXAMPLE[s]) ? EXAMPLE[s] : {budget:250000, orders:1200, aov:3500};
+  const B = num('#budget') || ex.budget;
+  const O = num('#orders') || ex.orders;
+  const A = num('#aov')    || ex.aov;
+  const revenue = O*A;
+  let CR=1, AOVm=1;
+  if(key==='sigtouch') CR *= IMPROVE.sigtouch;
+  if(key==='site'){ CR *= IMPROVE.siteCR[s]; AOVm *= IMPROVE.aovWithSite; }
+  if(key==='segment') CR *= IMPROVE.segmentCR[s];
+  const ordersW  = Math.round(O * CR);
+  const revenueW = ordersW * (A * AOVm);
+  return Math.max(0, revenueW - revenue);
+}
+function updateFeatureBadges(){
+  const set = (id,val)=>{ const el = root.querySelector(id); if(el) el.textContent = '+' + (mny(val)); };
+  set('#featPlus-sigtouch', estPlusByFeature('sigtouch'));
+  set('#featPlus-site',     estPlusByFeature('site'));
+  set('#featPlus-segment',  estPlusByFeature('segment'));
+}
+
+function getLiftsBySphere(){
+  const s = seg() || 'ecom';
+  const CR =
+    (isFeatOn('sigtouch') ? IMPROVE.sigtouch     : 1) *
+    (isFeatOn('site')     ? IMPROVE.siteCR[s]    : 1) *
+    (isFeatOn('segment')  ? IMPROVE.segmentCR[s] : 1);
+  const AOV = isFeatOn('site') ? IMPROVE.aovWithSite : 1;
+  return { CR, AOV };
+}
+
+
+
+  const profiles = {
+    ecom:   { cpc:80 , l2s:1.00 },
+    b2b:    { cpc:150, l2s:.30 },
+    retail: { cpc:50 , l2s:.55 },
+    novice: { cpc:60 , l2s:.50 }
+  };
+// Примерные значения по сегментам — используем для авто-расчёта
+const EXAMPLE = {
+  ecom:   { budget: 250000, orders: 1200, aov: 3500  },
+  b2b:    { budget: 400000, orders:   80, aov: 60000 },
+  retail: { budget: 150000, orders:  300, aov: 5000  },
+  novice: { budget:  60000, orders:   40, aov: 4000  }
+};
+function applyExampleIfEmpty(){
+  const s = seg();
+  const d = EXAMPLE[s] || EXAMPLE.ecom;
+  const setIfEmpty = (sel,val)=>{
+    const el = root.querySelector(sel);
+    if(!el) return;
+    const v = Number(el.value || 0);
+    if(!v){ el.value = val; }
+  };
+  function ensureResultsVisible(){
+  const r = root.querySelector('#results');
+  if (r) r.classList.remove('is-hidden');
+}
+
+  setIfEmpty('#budget', d.budget);
+  setIfEmpty('#orders', d.orders);
+  setIfEmpty('#aov',    d.aov);
+  // показать блок результатов, если он скрыт
+  const r = root.querySelector('#results');
+  if(r) r.classList.remove('is-hidden');
+}
+
+  function getMargin(){
+  return defaults.MARGIN;
+}
+
+
+  function getProfile(){
+  const s = seg();
+  const base = profiles[s] || profiles.ecom;
+  return { cpc: base.cpc, l2s: base.l2s };
+}
+
+
+
+  function delta(sel, withV, baseV, invert=false){
+    const el = $(sel); if(!el) return; el.classList.remove('pos','neg'); el.textContent='—';
+    if(!isFinite(withV)||!isFinite(baseV)||Math.abs(baseV)<1e-9) return;
+    let d=(withV-baseV)/Math.abs(baseV); if(invert) d=-d;
+    el.textContent=(d>=0?'+':'')+Math.round(d*100)+'%';
+    el.classList.add(d>=0?'pos':'neg');
+  }
+
+  function drawChart(canvasId, labels, datasets){
+    const cvs = document.getElementById(canvasId); if(!cvs) return;
+    const dpr=Math.max(1,window.devicePixelRatio||1);
+    const Wcss=cvs.clientWidth||1000, Hcss=cvs.clientHeight||300;
+    cvs.width=Math.round(Wcss*dpr); cvs.height=Math.round(Hcss*dpr);
+    const ctx=cvs.getContext('2d'); ctx.setTransform(dpr,0,0,dpr,0,0);
+
+    let ymax=0; datasets.forEach(ds=>ds.data.forEach(v=>{ if(v!=null) ymax=Math.max(ymax,v); }));
+    ymax=niceMax(ymax*1.05);
+
+    const padL=64,padR=16,padT=22,padB=36, PW=Wcss-padL-padR, PH=Hcss-padT-padB;
+    const x=i=>padL + (PW*(labels.length<=1?0:(i/(labels.length-1))));
+    const y=v=>padT+PH-(PH*(v||0)/ymax);
+
+    ctx.clearRect(0,0,Wcss,Hcss);
+    ctx.fillStyle='#fff'; ctx.fillRect(0,0,Wcss,Hcss);
+    ctx.strokeStyle='rgba(0,0,0,.12)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+PH); ctx.lineTo(padL+PW,padT+PH); ctx.stroke();
+    ctx.font='12px Inter, system-ui'; ctx.fillStyle='#6b6b6b';
+
+    const steps=5;
+    for(let i=0;i<=steps;i++){
+      const yy=padT+PH-(PH*i/steps), val=Math.round(ymax*i/steps);
+      ctx.strokeStyle='rgba(0,0,0,.06)'; ctx.beginPath(); ctx.moveTo(padL,yy); ctx.lineTo(padL+PW,yy); ctx.stroke();
+      ctx.fillStyle='#6b6b6b'; ctx.fillText(val.toLocaleString('ru-RU'), 8, yy+4);
+    }
+    labels.forEach((l,i)=> ctx.fillText(l, x(i)-10, padT+PH+18));
+
+    datasets.forEach(ds=>{
+      ctx.strokeStyle=ds.color; ctx.lineWidth=2; ctx.beginPath();
+      ds.data.forEach((v,i)=>{ const xx=x(i), yy=y(v); if(i===0||v==null) ctx.moveTo(xx,yy); else ctx.lineTo(xx,yy); });
+      ctx.stroke();
+    });
+
+    // legend
+    let lx=padL, ly=8;
+    datasets.forEach(ds=>{
+      ctx.fillStyle=ds.color; ctx.fillRect(lx,ly,12,12);
+      ctx.fillStyle='#333'; ctx.fillText(' '+ds.label, lx+16, ly+11);
+      lx += ctx.measureText('  '+ds.label).width + 38;
+    });
+  }
+
+  function computeQuick(){
+    const B=num('#budget'), O=num('#orders'), A=num('#aov');
+const hasSeg = !!root.querySelector('input[name="seg"]:checked');
+if (!(hasSeg && B>0 && O>0 && A>0)) { lockOutcome(true); return; }
+lockOutcome(false);
+
+hideHelper();
+
+
+
+    const { cpc, l2s } = getProfile();
+    const MARGIN = getMargin();
+
+    const clicks=B/cpc;
+    const cr=clicks>0?Math.min(O/clicks,1):0;
+    const leads = l2s>0 ? O/l2s : 0;
+    const revenue=O*A, gross=revenue*MARGIN, profit=gross-B, cpl=leads>0?B/leads:0, cac=O>0?B/O:0;
+
+
+    const { CR, AOV } = getLiftsBySphere();
+const crW  = cr * CR;
+const AOVw = A * AOV;
+
+const ordersW = cr>0 ? O*(crW/cr) : O*CR;
+
+   const revenueW=ordersW*AOVw, grossW=revenueW*MARGIN, profitW=grossW-B, cacW=ordersW>0?B/ordersW:0;
+
+
+    // now
+    $('#now_rev').textContent = mny(revenue);
+    $('#now_budget').textContent = mny(B);
+    $('#now_orders').textContent = iNT(O);
+    $('#now_aov').textContent = mny(A);
+    $('#now_cac').textContent = mny(cac);
+
+    // with
+    $('#with_rev').textContent = mny(revenueW);
+    $('#with_budget').textContent = mny(B);
+    $('#with_orders').textContent = iNT(ordersW);
+    $('#with_aov').textContent = mny(AOVw);
+    $('#with_cac').textContent = mny(cacW);
+
+    delta('#d_rev',revenueW,revenue);
+    delta('#d_budget',B,B);
+    delta('#d_orders',ordersW,O);
+    delta('#d_aov',AOVw,A);
+    delta('#d_cac',cacW,cac,true);
+
+    // pill update
+    const crx    = cr>0 ? (crW/cr) : CR;
+const aovPct = Math.round((AOV-1)*100);
+
+    const pill = root.querySelector('#with_title');
+    if (pill) pill.textContent = `Заявок ×${crx.toFixed(2)} • Средний чек +${aovPct}% • Цена клика та же`;
+
+    // quick chart (stays separate)
+    drawChart('chart',
+      ['М1','М2','М3','М4','М5','М6'],
+      [{label:'Выручка — сейчас', color:getVar('--brand-1', '#3B82F6'), data:[revenue,revenue,revenue,revenue,revenue,revenue]},
+       {label:'Выручка — с нами', color:getVar('--brand-3', '#E95C84'), data:[revenueW*.6,revenueW*.85,revenueW*.95,revenueW,revenueW,revenueW]}]);
+  }
+
+  function computePlan(){
+    const T = num('#target'); if(!(T>0)) return;
+    const B=num('#budget'), O=num('#orders'), A=num('#aov');
+    if (!(B>0 && O>0 && A>0)) return;
+
+    const { cpc, l2s } = getProfile();
+    const clicks=B/cpc, cr=clicks>0?Math.min(O/clicks,1):0;
+const { CR, AOV } = getLiftsBySphere();
+const crW = cr * CR, AOVw = A * AOV;
+
+    const needBase=(T/A)/(cr||1e-6)*cpc, needWith=(T/AOVw)/(crW||1e-6)*cpc;
+    const cap = Number($('#cap2')?.value || 10);
+
+    function traj(cr,aov,cpc,b0,bNeed,cap){
+      const months=[], g=cap/100; let b=Math.max(1,b0||bNeed*0.2), i=0, hit=null;
+      const needR=(bNeed/cpc)*cr*aov;
+      while(i++<48){ const revenue=(b/cpc)*cr*aov; months.push({budget:b,revenue});
+        if(!hit && revenue>=needR) hit=months.length; if(b>=bNeed*0.999) break; b=Math.min(bNeed,b*(1+g)); }
+      return {months,hit};
+    }
+    const tb=traj(cr,A,cpc,B,needBase,cap), tw=traj(crW,AOVw,cpc,B,needWith,cap);
+
+    // fill plan cards
+    const set = (sel,val)=>{ const el=root.querySelector(sel); if(el) el.textContent=val; };
+    set('#p_target1', mny(T)); set('#p_target2', mny(T));
+    set('#p_budget_base', mny(needBase)); set('#p_budget_with', mny(needWith));
+    set('#p_hit_base', tb.hit?('М'+tb.hit):'—'); set('#p_hit_with', tw.hit?('М'+tw.hit):'—');
+    set('#p_saved', mny(Math.max(0,needBase-needWith)));
+    let faster='—'; if(tb.hit&&tw.hit){ const d=tb.hit-tw.hit; faster=d>0?`на ${d} мес. быстрее`:d<0?`на ${Math.abs(d)} мес. медленнее`:'одинаково'; }
+    set('#p_faster', faster);
+
+    // show plan chart area and draw into a dedicated canvas
+    const wrap = document.getElementById('planChartWrap');
+    if (wrap && wrap.style.display==='none') wrap.style.display='block';
+
+    const maxLen=Math.max(tb.months.length,tw.months.length,6);
+    const labels=Array.from({length:maxLen},(_,i)=>'М'+(i+1));
+    const revB=labels.map((_,i)=>tb.months[i]?.revenue ?? null);
+    const revW=labels.map((_,i)=>tw.months[i]?.revenue ?? null);
+    drawChart('planChart',[...labels],[
+      {label:'Выручка — сейчас', color:getVar('--brand-1', '#3B82F6'), data:revB},
+      {label:'Выручка — с нами', color:getVar('--brand-3', '#E95C84'), data:revW}
+    ]);
+  }
+
+  // Inputs & interactions
+  ['input','change','keyup','blur','click'].forEach(evt=>{
+
+    root.addEventListener(evt, e=>{
+      if (e.target.matches('#budget,#orders,#aov')) { computeQuick(); computePlan(); }
+
+
+      if (e.target.matches('#target,#cap2')) computePlan();
+      if (e.target.closest('.seg .opt')){
+  const lab = e.target.closest('.seg .opt');
+  root.querySelectorAll('.seg .opt').forEach(x=>x.setAttribute('aria-checked', x===lab ? 'true':'false'));
+  const r = lab.querySelector('input[name="seg"]'); if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles:true })); }
+
+  computeQuick();
+  computePlan();
+
+
+
+
+        // обновляем прогресс шага 1
+(function updateSegProgress(){
+  const order = ['ecom','b2b','retail','novice'];
+  const sel = lab.getAttribute('data-k');
+  const idx = Math.max(0, order.indexOf(sel));
+  const bar = root.querySelector('.seg-progress span');
+  if (bar) bar.style.setProperty('--idx', idx);
+})();
+
+      }
+    }, true);
+  });
+  root.querySelectorAll('.seg .opt').forEach(opt=>{
+    opt.addEventListener('keydown', (e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); opt.click(); } });
+    opt.addEventListener('click', ()=>{
+  root.querySelectorAll('.seg .opt').forEach(x=>x.setAttribute('aria-checked', x===opt ? 'true':'false'));
+  const r = opt.querySelector('input[name="seg"]'); if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles:true })); }
+
+  computeQuick();
+  computePlan();
+});
+
+
+  });
+  document.getElementById('goalPanel')?.addEventListener('toggle', ()=> computePlan());
+// --- Прямые слушатели на поля ввода (мгновенный пересчёт)
+root.querySelectorAll('#budget,#orders,#aov').forEach(el=>{
+  ['input','change'].forEach(ev=> el.addEventListener(ev, ()=>{ computeQuick(); computePlan(); }));
+});
+
+
+// --- Прямой слушатель на смену сферы (radio) — пересчёт
+root.querySelectorAll('input[name="seg"]').forEach(r=>{
+  r.addEventListener('change', ()=>{
+    const lab = r.closest('.opt');
+    root.querySelectorAll('.seg .opt').forEach(x=> x.setAttribute('aria-checked', x===lab ? 'true' : 'false'));
+    computeQuick();
+    computePlan();
+  });
+});
+
+
+// Опции улучшений → пересчёт сразу
+root.querySelectorAll('#featuresBlock .feat-card input').forEach(ch=>{
+  ch.addEventListener('change', ()=>{
+    ch.closest('.feat-card')?.classList.toggle('on', ch.checked);
+    computeQuick();
+    computePlan();
+    updateFeatureBadges();
+  });
+});
+// Пресеты опций
+root.querySelectorAll('#featuresBlock [data-preset]').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const mode = btn.getAttribute('data-preset');
+    root.querySelectorAll('#featuresBlock .feat-card input').forEach(inp=>{
+      if (mode==='all') inp.checked = true;
+      else if (mode==='sigtouch') inp.checked = (inp.closest('.feat-card')?.dataset.key === 'sigtouch');
+      else if (mode==='none') inp.checked = false;
+      inp.dispatchEvent(new Event('change', {bubbles:true}));
+    });
+  });
+});
+// Пересчёт плана при изменении полей цели
+root.querySelectorAll('#target,#cap2').forEach(el=>{
+  ['input','change'].forEach(ev=> el.addEventListener(ev, ()=> computePlan()));
+});
+
+
+  // export
+  document.getElementById('btnPng')?.addEventListener('click', ()=>{
+    const a=document.createElement('a'); a.download='retach-calc-chart.png'; a.href=document.getElementById('chart').toDataURL('image/png'); a.click();
+  });
+  document.getElementById('btnPdf')?.addEventListener('click', ()=> window.print());
+  document.getElementById('btnPngPlan')?.addEventListener('click', ()=>{
+    const a=document.createElement('a'); a.download='retach-calc-plan-chart.png'; a.href=document.getElementById('planChart').toDataURL('image/png'); a.click();
+  });
+
+  // init
+lockOutcome(true);
+computeQuick();
+computePlan();
+updateFeatureBadges && updateFeatureBadges();
+// подсветить включённые карточки опций
+
+root.querySelectorAll('#featuresBlock .feat-card input').forEach(inp=>{
+  inp.closest('.feat-card')?.classList.toggle('on', inp.checked);
+});
+
+
+})();
+
+// --- Helper modal API
+// Helper modal: безопасные геттеры (DOM может быть ниже по документу)
+function getHelper(){ return document.getElementById('calcHelper'); }
+function showHelper(){
+  const h = getHelper(); if (!h) return;
+  h.hidden = false;
+  requestAnimationFrame(()=> h.classList.add('on'));
+}
+function hideHelper(){
+  const h = getHelper(); if (!h) return;
+  h.classList.remove('on');
+  setTimeout(()=> h.hidden = true, 200);
+}
+// Кнопки модалки (через делегирование — элемент уже может быть создан)
+document.addEventListener('click', (e)=>{
+  if (e.target.closest('#calcHelper .h-close, #calcHelper .h-ok')) hideHelper();
+}, {passive:true});
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') hideHelper(); }, {passive:true});
+
+// --- Показывать модалку, когда пользователь дошёл до outcomeWrap, а вуаль ещё включена
+(function observeOutcome(){
+  const target = document.getElementById('outcomeWrap');
+  if (!target || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries)=>{
+    const e = entries[0];
+    const locked = target.classList.contains('locked');
+    if (e.isIntersecting && locked) showHelper();
+  }, {threshold: .25});
+  io.observe(target);
+})();
+
+</script>
+
+<!-- ===== Callback modal script (kept) ===== -->
+<script>
+(function(){
+  const modal = document.querySelector('.cb-modal');
+  const form  = document.getElementById('callback-form');
+  const msg   = form?.querySelector('.cb-msg');
+  function open(){ modal?.removeAttribute('hidden'); try{ form.querySelector('#cb-phone')?.focus(); }catch(_){} }
+  function close(){ modal?.setAttribute('hidden',''); }
+  document.querySelectorAll('[data-cb-open]')?.forEach(b=> b.addEventListener('click', (e)=>{ e.preventDefault(); open(); }));
+  document.querySelectorAll('[data-cb-close]')?.forEach(b=> b.addEventListener('click', close));
+  modal?.addEventListener('click', e=>{ if(e.target.classList.contains('cb-backdrop')) close(); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); }, {passive:true});
+
+  function format(v){
+    let d = (''+v).replace(/\D/g,'');
+    if(d.startsWith('8')) d='7'+d.slice(1);
+    if(!d.startsWith('7')) d='7'+d;
+    d = d.slice(0,11);
+    const p = d.padEnd(11,'_').split('');
+    return `+${p[0]} (${p.slice(1,4).join('')}) ${p.slice(4,7).join('')}-${p.slice(7,9).join('')}-${p.slice(9,11).join('')}`.replace(/_/g,'');
+  }
+  const phone = form?.querySelector('#cb-phone');
+  phone?.addEventListener('input', ()=> phone.value = format(phone.value));
+
+  form?.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    msg.textContent='';
+    const digits = (phone.value||'').replace(/\D/g,'');
+    if (digits.length < 10) { msg.textContent='Проверьте телефон'; return; }
+    if (!form.elements.consent.checked){ msg.textContent='Нужно согласие на обработку данных'; return; }
+    const btn = form.querySelector('.cb-submit'); btn.disabled=true; btn.textContent='Отправляю…';
+    try{
+      const d = digits.length===11 && digits[0]==='8' ? '7'+digits.slice(1) : (digits.length===10 ? '7'+digits : digits);
+      const e164 = '+'+d;
+      const fd = new FormData(); fd.set('name','Обратный звонок (калькулятор)'); fd.set('contact', e164); fd.set('comment','Обратный звонок (калькулятор)');
+      const res = await fetch('/send.php', { method:'POST', body: fd, credentials:'same-origin', headers:{'Accept':'application/json'} });
+      const data = await res.json().catch(()=>({}));
+      if (res.ok && data && data.ok){ msg.textContent='Готово! Мы перезвоним.'; form.reset(); setTimeout(close, 900); }
+      else { msg.textContent = (data && (data.hint||data.error)) || 'Не удалось отправить. Повторите позже.'; }
+    }catch(err){ msg.textContent='Сеть недоступна или сервер не ответил.'; }
+    finally{ btn.disabled=false; btn.textContent='Отправить'; }
+  });
+})();
+</script>
+<!-- Helper modal: как пользоваться калькулятором -->
+<div id="calcHelper" role="dialog" aria-modal="true" aria-labelledby="calcHelperTitle" hidden>
+  <button class="h-close" type="button" aria-label="Закрыть">×</button>
+  <div class="h-inner">
+    <div class="h-text">
+      <h3 id="calcHelperTitle">Как пользоваться калькулятором</h3>
+      <ol class="h-steps">
+        <li>Выберите сферу: e-com, B2B, офлайн или новый проект.</li>
+        <li>Введите 3 числа: бюджет, заказы и средний чек.</li>
+        <li>Смотрите результат и стройте план.</li>
+      </ol>
+      <button class="h-ok" type="button">Понятно</button>
+    </div>
+    <figure class="h-figure" aria-hidden="true">
+      <img src="/images/calc/calc_info.png" alt="" width="320" height="320" loading="eager" decoding="async">
+    </figure>
+  </div>
+</div>
+<script id="ym-segtach-and-case">
+(function(){
+  var YM_ID = 104358334;                  // ID счётчика
+  var GOAL  = 'segtach_and_case';         // имя цели
+  // ключи sessionStorage (живут в текущей вкладке)
+  var K = {
+    segSeen : 'ym_seen_segtach_ts_v1',
+    caseSeen: 'ym_seen_case_ts_v1',
+    fired   : 'ym_pair_fired_v1'
+  };
+
+  function ensureYm(cb){
+    if (typeof ym === 'function') return cb();
+    var s=document.createElement('script');
+    s.src='https://mc.yandex.ru/metrika/tag.js'; s.async=true;
+    s.onload=function(){ try{ ym(YM_ID,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true}); }catch(_){ } cb(); };
+    document.head.appendChild(s);
+  }
+  function sendPair(){
+    if (sessionStorage.getItem(K.fired)) return;
+    var tsS = +sessionStorage.getItem(K.segSeen)||0;
+    var tsC = +sessionStorage.getItem(K.caseSeen)||0;
+    if (!tsS || !tsC) return;
+
+    var order = tsS <= tsC ? 'segtach_then_case' : 'case_then_segtach';
+    ensureYm(function(){
+      try{ ym(YM_ID,'reachGoal',GOAL,{order:order}); }catch(_){}
+      if (location.search.includes('debugGoals=1')) console.log('[YM] segtach_and_case →',{order});
+    });
+    sessionStorage.setItem(K.fired,'1'); // стреляем один раз за визит
+  }
+
+  function markIfMatch(){
+    var p = location.pathname.replace(/\/+$/,'/');
+    var now = Date.now();
+    // страница СегТач (подстраховка на варианты)
+    if (/^\/segtach(\/|$)/i.test(p) || /^\/sigtouch(\/|$)/i.test(p)){
+      sessionStorage.setItem(K.segSeen, String(now));
+    }
+    // любая страница кейса
+    if (/^\/cases\//i.test(p)){
+      sessionStorage.setItem(K.caseSeen, String(now));
+    }
+    sendPair();
+  }
+
+  // учесть текущую страницу
+  markIfMatch();
+
+  // поддержка SPA/динамической навигации
+  (function(){
+    var _ps=history.pushState, _rs=history.replaceState;
+    function onNav(){ setTimeout(markIfMatch,0); }
+    history.pushState=function(){ var r=_ps.apply(this,arguments); onNav(); return r; };
+    history.replaceState=function(){ var r=_rs.apply(this,arguments); onNav(); return r; };
+    window.addEventListener('popstate', onNav);
+  })();
+})();
+</script>
+
+
+<script>
+(function(){
+  try{ vkBridge.send('VKWebAppInit'); }catch(e){ console.log('vkBridge init skipped', e); }
+  // Try to expand in desktop
+  try{ vkBridge.send('VKWebAppExpand'); }catch(_){}
+  // Apply VK themes if provided
+  try{
+    vkBridge.subscribe(function(e){
+      if(!e.detail) return;
+      var type = e.detail.type, data = e.detail.data || {};
+      if(type==='VKWebAppUpdateConfig'){
+        var scheme = data.scheme || '';
+        document.documentElement.setAttribute('scheme', scheme);
+        if(data.hasOwnProperty('appearance')){
+          document.documentElement.style.colorScheme = data.appearance;
+        }
+      }
+    });
+  }catch(_){}
+})();
+</script>
+
+</body>
+</html>
